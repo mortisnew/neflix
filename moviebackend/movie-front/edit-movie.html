@@ -1,0 +1,1615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Edit Movie</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f6fa;
+            color: #222;
+        }
+
+        .navbar {
+            background: #1f2937;
+            color: white;
+            padding: 20px 40px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar h2 {
+            margin: 0;
+        }
+
+        .back {
+            color: white;
+            text-decoration: none;
+            background: #374151;
+            padding: 10px 18px;
+            border-radius: 6px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 30px;
+
+            background: white;
+            border-radius: 10px;
+
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            margin-top: 0;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 11px;
+
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+
+            font-size: 15px;
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        select[multiple] {
+            min-height: 130px;
+        }
+
+        .people-container,
+        .links-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .person-row,
+        .link-row {
+            padding: 15px;
+
+            border: 1px solid #ddd;
+            border-radius: 8px;
+
+            background: #fafafa;
+        }
+
+        .person-row {
+            display: grid;
+            grid-template-columns: 1fr 200px auto;
+            gap: 10px;
+            align-items: end;
+        }
+
+        .link-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 10px;
+        }
+
+        .remove-btn {
+            background: #ef4444;
+            color: white;
+
+            border: none;
+            border-radius: 6px;
+
+            padding: 10px 15px;
+
+            cursor: pointer;
+        }
+
+        .add-btn {
+            background: #2563eb;
+            color: white;
+
+            border: none;
+            border-radius: 6px;
+
+            padding: 11px 20px;
+
+            cursor: pointer;
+
+            margin-top: 10px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 40px;
+        }
+
+        button {
+            font-size: 15px;
+        }
+
+        .save {
+            background: #2563eb;
+            color: white;
+
+            border: none;
+            border-radius: 6px;
+
+            padding: 12px 25px;
+
+            cursor: pointer;
+        }
+
+        .cancel {
+            background: #e5e7eb;
+            color: #222;
+
+            text-decoration: none;
+
+            padding: 12px 25px;
+
+            border-radius: 6px;
+        }
+
+        @media (max-width: 800px) {
+
+            .person-row {
+                grid-template-columns: 1fr;
+            }
+
+            .link-row {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                margin: 20px;
+            }
+
+        }
+
+    </style>
+</head>
+
+<body>
+
+
+    <div class="navbar">
+
+        <h2>Movie Admin</h2>
+
+        <a href="movie.html" class="back">
+            Movies
+        </a>
+
+    </div>
+
+
+    <div class="container">
+
+        <h1>Edit Movie</h1>
+
+
+        <form id="movieForm">
+
+
+            <!-- BASIC INFORMATION -->
+
+            <h2>Basic Information</h2>
+
+
+            <div class="form-group">
+
+                <label for="title">
+                    Title
+                </label>
+
+                <input
+                    type="text"
+                    id="title"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="poster_url">
+                    Poster URL
+                </label>
+
+                <input
+                    type="url"
+                    id="poster_url"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="description">
+                    Description
+                </label>
+
+                <textarea id="description"></textarea>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="imdb_rating">
+                    IMDb Rating
+                </label>
+
+                <input
+                    type="number"
+                    id="imdb_rating"
+                    min="1"
+                    max="10"
+                    step="0.01"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="duration">
+                    Duration
+                </label>
+
+                <input
+                    type="number"
+                    id="duration"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="release_date">
+                    Release Date
+                </label>
+
+                <input
+                    type="date"
+                    id="release_date"
+                    required
+                >
+
+            </div>
+
+
+            <!-- CATALOG -->
+
+            <h2>Catalog</h2>
+
+
+            <div class="form-group">
+
+                <label for="genre">
+                    Genre
+                </label>
+
+                <select id="genre" multiple>
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="country">
+                    Country
+                </label>
+
+                <select id="country" multiple>
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="language">
+                    Language
+                </label>
+
+                <select id="language" multiple>
+                </select>
+
+            </div>
+
+
+            <!-- PEOPLE -->
+
+            <h2>People</h2>
+
+            <div
+                id="people-container"
+                class="people-container"
+            >
+            </div>
+
+
+            <button
+                type="button"
+                class="add-btn"
+                onclick="addPersonRow()"
+            >
+                + Add Person
+            </button>
+
+
+            <!-- MOVIE LINKS -->
+
+            <h2>Movie Links</h2>
+
+            <div
+                id="links-container"
+                class="links-container"
+            >
+            </div>
+
+
+            <button
+                type="button"
+                class="add-btn"
+                onclick="addLinkRow()"
+            >
+                + Add Movie Link
+            </button>
+
+
+            <!-- ACTIONS -->
+
+            <div class="actions">
+
+                <button
+                    type="submit"
+                    class="save"
+                >
+                    Save Changes
+                </button>
+
+                <a
+                    href="movie.html"
+                    class="cancel"
+                >
+                    Cancel
+                </a>
+
+            </div>
+
+
+        </form>
+
+    </div>
+
+
+    <script>
+
+
+        const accessToken =
+            localStorage.getItem("access_token");
+
+
+        const params =
+            new URLSearchParams(window.location.search);
+
+
+        const movieId =
+            params.get("id");
+
+
+        let allPeople = [];
+
+        let allQualities = [];
+
+        let originalRoles = [];
+
+        let originalLinks = [];
+
+
+        // ----------------------------------------
+        // LOAD OPTIONS
+        // ----------------------------------------
+
+
+        async function loadOptions(url, elementId) {
+
+            const response = await fetch(
+                `http://127.0.0.1:8000${url}`,
+                {
+                    headers: {
+                        "Authorization":
+                            `Bearer ${accessToken}`
+                    }
+                }
+            );
+
+
+            if (!response.ok) {
+
+                console.log(
+                    "Failed to load:",
+                    url
+                );
+
+                return [];
+
+            }
+
+
+            const data =
+                await response.json();
+
+
+            return Array.isArray(data)
+                ? data
+                : data.results;
+
+        }
+
+
+        // ----------------------------------------
+        // LOAD MOVIE
+        // ----------------------------------------
+
+
+        async function loadMovie() {
+
+            const response = await fetch(
+                `http://127.0.0.1:8000/content/movies/${movieId}/`,
+                {
+                    headers: {
+                        "Authorization":
+                            `Bearer ${accessToken}`
+                    }
+                }
+            );
+
+
+            if (!response.ok) {
+
+                alert("Failed to load movie.");
+
+                return;
+
+            }
+
+
+            const movie =
+                await response.json();
+
+
+            document.getElementById("title").value =
+                movie.title || "";
+
+
+            document.getElementById("poster_url").value =
+                movie.poster_url || "";
+
+
+            document.getElementById("description").value =
+                movie.description || "";
+
+
+            document.getElementById("imdb_rating").value =
+                movie.imdb_rating || "";
+
+
+            document.getElementById("duration").value =
+                movie.duration || "";
+
+
+            document.getElementById("release_date").value =
+                movie.release_date || "";
+
+
+            movie.genre.forEach(id => {
+
+                const option =
+                    document.querySelector(
+                        `#genre option[value="${id}"]`
+                    );
+
+                if (option) {
+                    option.selected = true;
+                }
+
+            });
+
+
+            movie.country.forEach(id => {
+
+                const option =
+                    document.querySelector(
+                        `#country option[value="${id}"]`
+                    );
+
+                if (option) {
+                    option.selected = true;
+                }
+
+            });
+
+
+            movie.language.forEach(id => {
+
+                const option =
+                    document.querySelector(
+                        `#language option[value="${id}"]`
+                    );
+
+                if (option) {
+                    option.selected = true;
+                }
+
+            });
+
+
+            loadRoles();
+
+            loadMovieLinks();
+
+        }
+
+
+        // ----------------------------------------
+        // PEOPLE
+        // ----------------------------------------
+
+
+        async function loadPeople() {
+
+            allPeople =
+                await loadOptions(
+                    "/people/people/",
+                    null
+                );
+
+        }
+
+
+        async function loadRoles() {
+
+            const response = await fetch(
+                `http://127.0.0.1:8000/content/roles/?movie=${movieId}`,
+                {
+                    headers: {
+                        "Authorization":
+                            `Bearer ${accessToken}`
+                    }
+                }
+            );
+
+
+            if (!response.ok) {
+
+                console.log(
+                    "Failed to load roles"
+                );
+
+                return;
+
+            }
+
+
+            const data =
+                await response.json();
+
+
+            originalRoles =
+                Array.isArray(data)
+                    ? data
+                    : data.results;
+
+
+            const container =
+                document.getElementById(
+                    "people-container"
+                );
+
+
+            container.innerHTML = "";
+
+
+            originalRoles.forEach(role => {
+
+                addPersonRow(
+                    role.person,
+                    role.role_type,
+                    role.id
+                );
+
+            });
+
+        }
+
+
+        function addPersonRow(
+            personId = "",
+            roleType = "",
+            roleId = ""
+        ) {
+
+            const container =
+                document.getElementById(
+                    "people-container"
+                );
+
+
+            const row =
+                document.createElement("div");
+
+
+            row.className =
+                "person-row";
+
+
+            row.dataset.roleId =
+                roleId;
+
+
+            let peopleOptions = "";
+
+
+            allPeople.forEach(person => {
+
+                peopleOptions += `
+                    <option
+                        value="${person.id}"
+                        ${Number(personId) === Number(person.id) ? "selected" : ""}
+                    >
+                        ${person.full_name}
+                    </option>
+                `;
+
+            });
+
+
+            row.innerHTML = `
+
+                <div>
+
+                    <label>
+                        Person
+                    </label>
+
+                    <select class="person-select">
+
+                        <option value="">
+                            Select Person
+                        </option>
+
+                        ${peopleOptions}
+
+                    </select>
+
+                </div>
+
+
+                <div>
+
+                    <label>
+                        Role
+                    </label>
+
+                    <select class="role-select">
+
+                        <option value="">
+                            Select Role
+                        </option>
+
+                        <option
+                            value="actor"
+                            ${roleType === "actor" ? "selected" : ""}
+                        >
+                            Actor
+                        </option>
+
+                        <option
+                            value="director"
+                            ${roleType === "director" ? "selected" : ""}
+                        >
+                            Director
+                        </option>
+
+                        <option
+                            value="writer"
+                            ${roleType === "writer" ? "selected" : ""}
+                        >
+                            Writer
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="remove-btn"
+                    onclick="removePersonRow(this)"
+                >
+                    Remove
+                </button>
+
+            `;
+
+
+            container.appendChild(row);
+
+        }
+
+
+        async function removePersonRow(button) {
+
+            const row =
+                button.parentElement;
+
+
+            const roleId =
+                row.dataset.roleId;
+
+
+            if (roleId) {
+
+                const response = await fetch(
+                    `http://127.0.0.1:8000/content/roles/${roleId}/`,
+                    {
+                        method: "DELETE",
+
+                        headers: {
+                            "Authorization":
+                                `Bearer ${accessToken}`
+                        }
+                    }
+                );
+
+
+                if (!response.ok) {
+
+                    alert(
+                        "Failed to remove person."
+                    );
+
+                    return;
+
+                }
+
+            }
+
+
+            row.remove();
+
+        }
+
+
+        // ----------------------------------------
+        // MOVIE LINKS
+        // ----------------------------------------
+
+
+        async function loadQualities() {
+
+            allQualities =
+                await loadOptions(
+                    "/catalog/qualities/",
+                    null
+                );
+
+        }
+
+
+        async function loadMovieLinks() {
+
+            const response = await fetch(
+                `http://127.0.0.1:8000/content/movie-streams/?movie=${movieId}`,
+                {
+                    headers: {
+                        "Authorization":
+                            `Bearer ${accessToken}`
+                    }
+                }
+            );
+
+
+            if (!response.ok) {
+
+                console.log(
+                    "Failed to load movie links"
+                );
+
+                return;
+
+            }
+
+
+            const data =
+                await response.json();
+
+
+            originalLinks =
+                Array.isArray(data)
+                    ? data
+                    : data.results;
+
+
+            const container =
+                document.getElementById(
+                    "links-container"
+                );
+
+
+            container.innerHTML = "";
+
+
+            originalLinks.forEach(link => {
+
+                addLinkRow(link);
+
+            });
+
+        }
+
+
+        function addLinkRow(link = null) {
+
+            const container =
+                document.getElementById(
+                    "links-container"
+                );
+
+
+            const row =
+                document.createElement("div");
+
+
+            row.className =
+                "link-row";
+
+
+            row.dataset.linkId =
+                link ? link.id : "";
+
+
+            let qualityOptions = "";
+
+
+            allQualities.forEach(quality => {
+
+                qualityOptions += `
+
+                    <option
+                        value="${quality.id}"
+                        ${link && Number(link.quality) === Number(quality.id) ? "selected" : ""}
+                    >
+                        ${quality.name}
+                    </option>
+
+                `;
+
+            });
+
+
+            row.innerHTML = `
+
+                <div>
+
+                    <label>
+                        Quality
+                    </label>
+
+                    <select class="quality-select">
+
+                        <option value="">
+                            Select Quality
+                        </option>
+
+                        ${qualityOptions}
+
+                    </select>
+
+                </div>
+
+
+                <div>
+
+                    <label>
+                        Encoder
+                    </label>
+
+                    <input
+                        type="text"
+                        class="encoder"
+                        value="${link ? link.encoder || "" : ""}"
+                    >
+
+                </div>
+
+
+                <div>
+
+                    <label>
+                        Size MB
+                    </label>
+
+                    <input
+                        type="number"
+                        class="size-mb"
+                        value="${link ? link.size_mb || "" : ""}"
+                    >
+
+                </div>
+
+
+                <div>
+
+                    <label>
+                        Subtitle
+                    </label>
+
+                    <select class="sub-chose">
+
+                        <option
+                            value="original"
+                            ${link && link.sub_chose === "original" ? "selected" : ""}
+                        >
+                            Original
+                        </option>
+
+                        <option
+                            value="subtitle"
+                            ${link && link.sub_chose === "subtitle" ? "selected" : ""}
+                        >
+                            Subtitle
+                        </option>
+
+                        <option
+                            value="dubbed"
+                            ${link && link.sub_chose === "dubbed" ? "selected" : ""}
+                        >
+                            Dubbed
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div>
+
+                    <label>
+                        URL
+                    </label>
+
+                    <input
+                        type="url"
+                        class="link-url"
+                        value="${link ? link.url || "" : ""}"
+                    >
+
+                </div>
+
+
+                <div>
+
+                    <label>
+                        Subtitle File
+                    </label>
+
+                    <input
+                        type="file"
+                        class="sub-file"
+                    >
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="remove-btn"
+                    onclick="removeLinkRow(this)"
+                >
+                    Remove
+                </button>
+
+            `;
+
+
+            container.appendChild(row);
+
+        }
+
+
+        async function removeLinkRow(button) {
+
+            const row =
+                button.parentElement;
+
+
+            const linkId =
+                row.dataset.linkId;
+
+
+            if (linkId) {
+
+                const response = await fetch(
+                    `http://127.0.0.1:8000/content/movie-streams/${linkId}/`,
+                    {
+                        method: "DELETE",
+
+                        headers: {
+                            "Authorization":
+                                `Bearer ${accessToken}`
+                        }
+                    }
+                );
+
+
+                if (!response.ok) {
+
+                    alert(
+                        "Failed to remove movie link."
+                    );
+
+                    return;
+
+                }
+
+            }
+
+
+            row.remove();
+
+        }
+
+
+        // ----------------------------------------
+        // SAVE MOVIE
+        // ----------------------------------------
+
+
+        document.getElementById(
+            "movieForm"
+        ).addEventListener(
+            "submit",
+            async function(event) {
+
+                event.preventDefault();
+
+
+                const genre =
+                    Array.from(
+                        document.getElementById(
+                            "genre"
+                        ).selectedOptions
+                    ).map(
+                        option =>
+                            Number(option.value)
+                    );
+
+
+                const country =
+                    Array.from(
+                        document.getElementById(
+                            "country"
+                        ).selectedOptions
+                    ).map(
+                        option =>
+                            Number(option.value)
+                    );
+
+
+                const language =
+                    Array.from(
+                        document.getElementById(
+                            "language"
+                        ).selectedOptions
+                    ).map(
+                        option =>
+                            Number(option.value)
+                    );
+
+
+                const movieData = {
+
+                    title:
+                        document.getElementById(
+                            "title"
+                        ).value,
+
+                    poster_url:
+                        document.getElementById(
+                            "poster_url"
+                        ).value,
+
+                    description:
+                        document.getElementById(
+                            "description"
+                        ).value,
+
+                    imdb_rating:
+                        document.getElementById(
+                            "imdb_rating"
+                        ).value,
+
+                    duration:
+                        document.getElementById(
+                            "duration"
+                        ).value,
+
+                    release_date:
+                        document.getElementById(
+                            "release_date"
+                        ).value,
+
+                    genre: genre,
+
+                    country: country,
+
+                    language: language
+
+                };
+
+
+                const movieResponse =
+                    await fetch(
+                        `http://127.0.0.1:8000/content/movies/${movieId}/`,
+                        {
+                            method: "PATCH",
+
+                            headers: {
+                                "Authorization":
+                                    `Bearer ${accessToken}`,
+
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body:
+                                JSON.stringify(
+                                    movieData
+                                )
+                        }
+                    );
+
+
+                if (!movieResponse.ok) {
+
+                    const error =
+                        await movieResponse.json();
+
+                    console.log(error);
+
+                    alert(
+                        "Failed to update movie."
+                    );
+
+                    return;
+
+                }
+
+
+                // SAVE PEOPLE
+
+                const peopleRows =
+                    document.querySelectorAll(
+                        ".person-row"
+                    );
+
+
+                for (const row of peopleRows) {
+
+                    const roleId =
+                        row.dataset.roleId;
+
+
+                    const person =
+                        row.querySelector(
+                            ".person-select"
+                        ).value;
+
+
+                    const roleType =
+                        row.querySelector(
+                            ".role-select"
+                        ).value;
+
+
+                    if (!person || !roleType) {
+                        continue;
+                    }
+
+
+                    const roleData = {
+
+                        person: Number(person),
+
+                        role_type: roleType,
+
+                        movie: Number(movieId)
+
+                    };
+
+
+                    if (roleId) {
+
+                        await fetch(
+                            `http://127.0.0.1:8000/content/roles/${roleId}/`,
+                            {
+                                method: "PATCH",
+
+                                headers: {
+                                    "Authorization":
+                                        `Bearer ${accessToken}`,
+
+                                    "Content-Type":
+                                        "application/json"
+                                },
+
+                                body:
+                                    JSON.stringify(
+                                        roleData
+                                    )
+                            }
+                        );
+
+                    } else {
+
+                        await fetch(
+                            "http://127.0.0.1:8000/content/roles/",
+                            {
+                                method: "POST",
+
+                                headers: {
+                                    "Authorization":
+                                        `Bearer ${accessToken}`,
+
+                                    "Content-Type":
+                                        "application/json"
+                                },
+
+                                body:
+                                    JSON.stringify(
+                                        roleData
+                                    )
+                            }
+                        );
+
+                    }
+
+                }
+
+
+                // SAVE MOVIE LINKS
+
+                const linkRows =
+                    document.querySelectorAll(
+                        ".link-row"
+                    );
+
+
+                for (const row of linkRows) {
+
+                    const linkId =
+                        row.dataset.linkId;
+
+
+                    const quality =
+                        row.querySelector(
+                            ".quality-select"
+                        ).value;
+
+
+                    const encoder =
+                        row.querySelector(
+                            ".encoder"
+                        ).value;
+
+
+                    const sizeMb =
+                        row.querySelector(
+                            ".size-mb"
+                        ).value;
+
+
+                    const subChose =
+                        row.querySelector(
+                            ".sub-chose"
+                        ).value;
+
+
+                    const url =
+                        row.querySelector(
+                            ".link-url"
+                        ).value;
+
+
+                    const fileInput =
+                        row.querySelector(
+                            ".sub-file"
+                        );
+
+
+                    if (
+                        !quality ||
+                        !encoder ||
+                        !sizeMb ||
+                        !url
+                    ) {
+                        continue;
+                    }
+
+
+                    const formData =
+                        new FormData();
+
+
+                    formData.append(
+                        "movie",
+                        String(movieId)
+                    );
+
+
+                    formData.append(
+                        "quality",
+                        quality
+                    );
+
+
+                    formData.append(
+                        "encoder",
+                        encoder
+                    );
+
+
+                    formData.append(
+                        "size_mb",
+                        sizeMb
+                    );
+
+
+                    formData.append(
+                        "sub_chose",
+                        subChose
+                    );
+
+
+                    formData.append(
+                        "url",
+                        url
+                    );
+
+
+                    if (
+                        fileInput.files.length > 0
+                    ) {
+
+                        formData.append(
+                            "sub_file",
+                            fileInput.files[0]
+                        );
+
+                    }
+
+
+                    let linkResponse;
+
+
+                    if (linkId) {
+
+                        linkResponse =
+                            await fetch(
+                                `http://127.0.0.1:8000/content/movie-streams/${linkId}/`,
+                                {
+                                    method: "PATCH",
+
+                                    headers: {
+                                        "Authorization":
+                                            `Bearer ${accessToken}`
+                                    },
+
+                                    body: formData
+                                }
+                            );
+
+                    } else {
+
+                        linkResponse =
+                            await fetch(
+                                "http://127.0.0.1:8000/content/movie-streams/",
+                                {
+                                    method: "POST",
+
+                                    headers: {
+                                        "Authorization":
+                                            `Bearer ${accessToken}`
+                                    },
+
+                                    body: formData
+                                }
+                            );
+
+                    }
+
+
+                    if (!linkResponse.ok) {
+
+                        console.log(
+                            await linkResponse.json()
+                        );
+
+                    }
+
+                }
+
+
+                alert(
+                    "Movie updated successfully."
+                );
+
+
+                window.location.href =
+                    "movie.html";
+
+            }
+        );
+
+
+        // ----------------------------------------
+        // INIT
+        // ----------------------------------------
+
+
+        async function init() {
+
+            await loadOptions(
+                "/catalog/genres/",
+                "genre"
+            ).then(items => {
+
+                const select =
+                    document.getElementById(
+                        "genre"
+                    );
+
+                items.forEach(item => {
+
+                    const option =
+                        document.createElement(
+                            "option"
+                        );
+
+                    option.value =
+                        item.id;
+
+                    option.textContent =
+                        item.name;
+
+                    select.appendChild(
+                        option
+                    );
+
+                });
+
+            });
+
+
+            await loadOptions(
+                "/catalog/countries/",
+                "country"
+            ).then(items => {
+
+                const select =
+                    document.getElementById(
+                        "country"
+                    );
+
+                items.forEach(item => {
+
+                    const option =
+                        document.createElement(
+                            "option"
+                        );
+
+                    option.value =
+                        item.id;
+
+                    option.textContent =
+                        item.name;
+
+                    select.appendChild(
+                        option
+                    );
+
+                });
+
+            });
+
+
+            await loadOptions(
+                "/catalog/languages/",
+                "language"
+            ).then(items => {
+
+                const select =
+                    document.getElementById(
+                        "language"
+                    );
+
+                items.forEach(item => {
+
+                    const option =
+                        document.createElement(
+                            "option"
+                        );
+
+                    option.value =
+                        item.id;
+
+                    option.textContent =
+                        item.name;
+
+                    select.appendChild(
+                        option
+                    );
+
+                });
+
+            });
+
+
+            await loadPeople();
+
+            await loadQualities();
+
+            await loadMovie();
+
+        }
+
+
+        init();
+
+    </script>
+
+</body>
+</html>

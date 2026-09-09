@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Edit Person</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f6fa;
+            color: #222;
+        }
+
+        .navbar {
+            background: #1f2937;
+            color: white;
+            padding: 20px 40px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar h2 {
+            margin: 0;
+        }
+
+        .back {
+            color: white;
+            text-decoration: none;
+            background: #374151;
+
+            padding: 10px 18px;
+
+            border-radius: 6px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 30px;
+
+            background: white;
+            border-radius: 10px;
+
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            margin-top: 0;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 11px;
+
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+
+            font-size: 15px;
+        }
+
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .preview {
+            width: 120px;
+            height: 120px;
+
+            object-fit: cover;
+
+            border-radius: 50%;
+
+            margin-bottom: 20px;
+
+            background: #ddd;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+
+            margin-top: 30px;
+        }
+
+        .save {
+            background: #2563eb;
+            color: white;
+
+            border: none;
+            border-radius: 6px;
+
+            padding: 12px 25px;
+
+            cursor: pointer;
+        }
+
+        .cancel {
+            background: #e5e7eb;
+            color: #222;
+
+            text-decoration: none;
+
+            padding: 12px 25px;
+
+            border-radius: 6px;
+        }
+
+    </style>
+</head>
+
+<body>
+
+
+<div class="navbar">
+
+    <h2>Movie Admin</h2>
+
+    <a
+        href="people.html"
+        class="back"
+    >
+        People
+    </a>
+
+</div>
+
+
+<div class="container">
+
+    <h1>Edit Person</h1>
+
+
+    <form id="personForm">
+
+
+        <img
+            id="avatarPreview"
+            class="preview"
+            src=""
+            alt="Avatar"
+        >
+
+
+        <div class="form-group">
+
+            <label for="avatar_url">
+                Avatar URL
+            </label>
+
+            <input
+                type="url"
+                id="avatar_url"
+                required
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label for="full_name">
+                Full Name
+            </label>
+
+            <input
+                type="text"
+                id="full_name"
+                required
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label for="bio">
+                Biography
+            </label>
+
+            <textarea
+                id="bio"
+            ></textarea>
+
+        </div>
+
+
+        <div class="actions">
+
+            <button
+                type="submit"
+                class="save"
+            >
+                Save Changes
+            </button>
+
+
+            <a
+                href="people.html"
+                class="cancel"
+            >
+                Cancel
+            </a>
+
+        </div>
+
+
+    </form>
+
+</div>
+
+
+<script>
+
+const accessToken =
+    localStorage.getItem("access_token");
+
+
+const params =
+    new URLSearchParams(
+        window.location.search
+    );
+
+
+const personId =
+    params.get("id");
+
+
+async function loadPerson() {
+
+    if (!personId) {
+
+        alert(
+            "Person ID is missing."
+        );
+
+        window.location.href =
+            "people.html";
+
+        return;
+
+    }
+
+
+    const response =
+        await fetch(
+            `http://127.0.0.1:8000/people/people/${personId}/`,
+            {
+                headers: {
+                    "Authorization":
+                        `Bearer ${accessToken}`
+                }
+            }
+        );
+
+
+    if (!response.ok) {
+
+        alert(
+            "Failed to load person."
+        );
+
+        return;
+
+    }
+
+
+    const person =
+        await response.json();
+
+
+    document.getElementById(
+        "avatar_url"
+    ).value =
+        person.avatar_url || "";
+
+
+    document.getElementById(
+        "full_name"
+    ).value =
+        person.full_name || "";
+
+
+    document.getElementById(
+        "bio"
+    ).value =
+        person.bio || "";
+
+
+    document.getElementById(
+        "avatarPreview"
+    ).src =
+        person.avatar_url || "";
+
+}
+
+
+document.getElementById(
+    "avatar_url"
+).addEventListener(
+    "input",
+    function() {
+
+        document.getElementById(
+            "avatarPreview"
+        ).src = this.value;
+
+    }
+);
+
+
+document.getElementById(
+    "personForm"
+).addEventListener(
+    "submit",
+    async function(event) {
+
+        event.preventDefault();
+
+
+        const personData = {
+
+            avatar_url:
+                document.getElementById(
+                    "avatar_url"
+                ).value,
+
+            full_name:
+                document.getElementById(
+                    "full_name"
+                ).value,
+
+            bio:
+                document.getElementById(
+                    "bio"
+                ).value
+
+        };
+
+
+        const response =
+            await fetch(
+                `http://127.0.0.1:8000/people/people/${personId}/`,
+                {
+                    method: "PATCH",
+
+                    headers: {
+                        "Authorization":
+                            `Bearer ${accessToken}`,
+
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify(
+                            personData
+                        )
+                }
+            );
+
+
+        if (!response.ok) {
+
+            const error =
+                await response.json();
+
+            console.log(
+                "PERSON UPDATE ERROR:",
+                error
+            );
+
+            alert(
+                "Failed to update person."
+            );
+
+            return;
+
+        }
+
+
+        alert(
+            "Person updated successfully."
+        );
+
+
+        window.location.href =
+            "people.html";
+
+    }
+
+);
+
+
+loadPerson();
+
+</script>
+
+</body>
+</html>
+

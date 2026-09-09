@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Admin - Series</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f6fa;
+            color: #222;
+        }
+
+        .navbar {
+            background: #1f2937;
+            color: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar h2 {
+            margin: 0;
+        }
+
+        .back {
+            color: white;
+            text-decoration: none;
+            background: #374151;
+            padding: 10px 18px;
+            border-radius: 6px;
+        }
+
+        .container {
+            padding: 40px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            margin: 0;
+        }
+
+        .add {
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+            padding: 11px 20px;
+            border-radius: 6px;
+        }
+
+        .series {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .serie {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,.08);
+        }
+
+        .serie img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .serie-info {
+            padding: 15px;
+        }
+
+        .serie-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .serie-rating {
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .actions button {
+            flex: 1;
+            padding: 9px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .edit {
+            background: #e5e7eb;
+            color: #222;
+        }
+
+        .delete {
+            background: #ef4444;
+            color: white;
+        }
+
+        @media (max-width: 1000px) {
+            .series {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 700px) {
+            .series {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 500px) {
+            .series {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="navbar">
+    <h2>Movie Admin</h2>
+
+    <a href="dashboard.html" class="back">
+        Dashboard
+    </a>
+</div>
+
+<div class="container">
+
+    <div class="header">
+        <h1>Series</h1>
+
+        <a href="add-series.html" class="add">
+            + Add Series
+        </a>
+    </div>
+
+    <div class="series" id="series"></div>
+
+</div>
+
+<script>
+
+const accessToken =
+    localStorage.getItem("access_token");
+
+
+async function loadSeries() {
+
+    const response = await fetch(
+        "http://127.0.0.1:8000/content/series/",
+        {
+            headers: {
+                "Authorization":
+                    `Bearer ${accessToken}`
+            }
+        }
+    );
+
+
+    if (!response.ok) {
+
+        console.log("Failed to load series");
+
+        return;
+    }
+
+
+    const data =
+        await response.json();
+
+
+    const series = Array.isArray(data)
+        ? data
+        : data.results;
+
+
+    const container =
+        document.getElementById("series");
+
+
+    container.innerHTML = "";
+
+
+    series.forEach(serie => {
+
+        const card =
+            document.createElement("div");
+
+        card.className = "serie";
+
+
+        card.innerHTML = `
+
+            <img
+                src="${serie.poster_url}"
+                alt="${serie.title}"
+            >
+
+            <div class="serie-info">
+
+                <div class="serie-title">
+                    ${serie.title}
+                </div>
+
+                <div class="serie-rating">
+                    ⭐ ${serie.imdb_rating ?? "N/A"}
+                </div>
+
+                <div class="actions">
+
+                    <button
+                        class="edit"
+                        onclick="editSeries(${serie.id})"
+                    >
+                        Edit
+                    </button>
+
+                    <button
+                        class="delete"
+                        onclick="deleteSeries(${serie.id})"
+                    >
+                        Delete
+                    </button>
+
+                </div>
+
+            </div>
+
+        `;
+
+
+        container.appendChild(card);
+
+    });
+
+}
+
+
+function editSeries(seriesId) {
+
+    window.location.href =
+        `edit-series.html?id=${seriesId}`;
+
+}
+
+
+async function deleteSeries(seriesId) {
+
+    const confirmDelete =
+        confirm(
+            "Are you sure you want to delete this series?"
+        );
+
+
+    if (!confirmDelete) {
+        return;
+    }
+
+
+    const response =
+        await fetch(
+            `http://127.0.0.1:8000/content/series/${seriesId}/`,
+            {
+                method: "DELETE",
+
+                headers: {
+                    "Authorization":
+                        `Bearer ${accessToken}`
+                }
+            }
+        );
+
+
+    if (response.ok) {
+
+        alert("Series deleted successfully.");
+
+        loadSeries();
+
+    } else {
+
+        alert("Failed to delete series.");
+
+    }
+
+}
+
+
+loadSeries();
+
+</script>
+
+</body>
+</html>

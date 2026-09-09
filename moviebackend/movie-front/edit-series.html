@@ -1,0 +1,2641 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Edit Series</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f6fa;
+            color: #222;
+        }
+
+        .navbar {
+            background: #1f2937;
+            color: white;
+            padding: 20px 40px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar h2 {
+            margin: 0;
+        }
+
+        .back {
+            color: white;
+            text-decoration: none;
+            background: #374151;
+            padding: 10px 18px;
+            border-radius: 6px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 30px;
+
+            background: white;
+            border-radius: 10px;
+
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            margin-top: 0;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 11px;
+
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+
+            font-size: 15px;
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        select[multiple] {
+            min-height: 130px;
+        }
+
+        .people-container,
+        .seasons-container,
+        .episodes-container,
+        .links-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .person-row {
+            display: grid;
+            grid-template-columns: 1fr 200px auto;
+            gap: 10px;
+            align-items: end;
+
+            padding: 15px;
+
+            border: 1px solid #ddd;
+            border-radius: 8px;
+
+            background: #fafafa;
+        }
+
+        .season-row {
+            padding: 20px;
+
+            border: 1px solid #ddd;
+            border-radius: 8px;
+
+            background: #fafafa;
+        }
+
+        .episode-row {
+            margin-top: 15px;
+            padding: 15px;
+
+            border: 1px solid #ddd;
+            border-radius: 8px;
+
+            background: white;
+        }
+
+        .episode-header {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 10px;
+            align-items: end;
+        }
+
+        .link-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 10px;
+
+            margin-top: 15px;
+
+            padding: 15px;
+
+            border: 1px solid #ddd;
+            border-radius: 8px;
+
+            background: #fafafa;
+        }
+
+        .add-btn {
+            background: #2563eb;
+            color: white;
+
+            border: none;
+            border-radius: 6px;
+
+            padding: 11px 20px;
+
+            cursor: pointer;
+
+            margin-top: 10px;
+        }
+
+        .remove-btn {
+            background: #ef4444;
+            color: white;
+
+            border: none;
+            border-radius: 6px;
+
+            padding: 10px 15px;
+
+            cursor: pointer;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+
+            margin-top: 40px;
+        }
+
+        .save {
+            background: #2563eb;
+            color: white;
+
+            border: none;
+            border-radius: 6px;
+
+            padding: 12px 25px;
+
+            cursor: pointer;
+        }
+
+        .cancel {
+            background: #e5e7eb;
+            color: #222;
+
+            text-decoration: none;
+
+            padding: 12px 25px;
+
+            border-radius: 6px;
+        }
+
+        @media (max-width: 800px) {
+
+            .person-row,
+            .link-row,
+            .episode-header {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                margin: 20px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="navbar">
+
+    <h2>Movie Admin</h2>
+
+    <a href="series.html" class="back">
+        Series
+    </a>
+
+</div>
+
+
+<div class="container">
+
+    <h1>Edit Series</h1>
+
+
+    <form id="seriesForm">
+
+
+        <!-- BASIC INFORMATION -->
+
+        <h2>Basic Information</h2>
+
+
+        <div class="form-group">
+
+            <label>Title</label>
+
+            <input
+                type="text"
+                id="title"
+                required
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>Poster URL</label>
+
+            <input
+                type="url"
+                id="poster_url"
+                required
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>Description</label>
+
+            <textarea id="description"></textarea>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>IMDb Rating</label>
+
+            <input
+                type="number"
+                id="imdb_rating"
+                min="1"
+                max="10"
+                step="0.01"
+                required
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>Duration</label>
+
+            <input
+                type="number"
+                id="duration"
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>Release Date</label>
+
+            <input
+                type="date"
+                id="release_date"
+                required
+            >
+
+        </div>
+
+
+        <!-- CATALOG -->
+
+        <h2>Catalog</h2>
+
+
+        <div class="form-group">
+
+            <label>Genre</label>
+
+            <select
+                id="genre"
+                multiple
+            ></select>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>Country</label>
+
+            <select
+                id="country"
+                multiple
+            ></select>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>Language</label>
+
+            <select
+                id="language"
+                multiple
+            ></select>
+
+        </div>
+
+
+        <!-- PEOPLE -->
+
+        <h2>People</h2>
+
+
+        <div
+            id="people-container"
+            class="people-container"
+        ></div>
+
+
+        <button
+            type="button"
+            class="add-btn"
+            onclick="addPersonRow()"
+        >
+            + Add Person
+        </button>
+
+
+        <!-- SEASONS -->
+
+        <h2>Seasons</h2>
+
+
+        <div
+            id="seasons-container"
+            class="seasons-container"
+        ></div>
+
+
+        <button
+            type="button"
+            class="add-btn"
+            onclick="addSeasonRow()"
+        >
+            + Add Season
+        </button>
+
+
+        <!-- ACTIONS -->
+
+        <div class="actions">
+
+            <button
+                type="submit"
+                class="save"
+            >
+                Save Changes
+            </button>
+
+            <a
+                href="series.html"
+                class="cancel"
+            >
+                Cancel
+            </a>
+
+        </div>
+
+
+    </form>
+
+</div>
+
+
+<script>
+
+
+const API =
+    "http://127.0.0.1:8000";
+
+
+const accessToken =
+    localStorage.getItem("access_token");
+
+
+const params =
+    new URLSearchParams(
+        window.location.search
+    );
+
+
+const seriesId =
+    params.get("id");
+
+
+let allPeople = [];
+
+let allQualities = [];
+
+let serverSeasons = [];
+
+
+/* =========================================================
+   API
+========================================================= */
+
+
+async function apiFetch(
+    url,
+    options = {}
+) {
+
+    options.headers = {
+
+        ...(options.headers || {}),
+
+        "Authorization":
+            `Bearer ${accessToken}`
+
+    };
+
+
+    return fetch(
+        `${API}${url}`,
+        options
+    );
+
+}
+
+
+/* =========================================================
+   LOAD OPTIONS
+========================================================= */
+
+
+async function loadOptions(url) {
+
+    const response =
+        await apiFetch(url);
+
+
+    if (!response.ok) {
+
+        console.log(
+            "Failed to load:",
+            url
+        );
+
+        return [];
+
+    }
+
+
+    const data =
+        await response.json();
+
+
+    return Array.isArray(data)
+        ? data
+        : data.results || [];
+
+}
+
+
+/* =========================================================
+   PEOPLE
+========================================================= */
+
+
+async function loadPeople() {
+
+    allPeople =
+        await loadOptions(
+            "/people/people/"
+        );
+
+}
+
+
+/* =========================================================
+   QUALITIES
+========================================================= */
+
+
+async function loadQualities() {
+
+    allQualities =
+        await loadOptions(
+            "/catalog/qualities/"
+        );
+
+}
+
+
+/* =========================================================
+   LOAD SERIES
+========================================================= */
+
+
+async function loadSeries() {
+
+    const response =
+        await apiFetch(
+            `/content/series/${seriesId}/`
+        );
+
+
+    if (!response.ok) {
+
+        alert(
+            "Failed to load series."
+        );
+
+        return;
+
+    }
+
+
+    const series =
+        await response.json();
+
+
+    document.getElementById("title").value =
+        series.title || "";
+
+
+    document.getElementById("poster_url").value =
+        series.poster_url || "";
+
+
+    document.getElementById("description").value =
+        series.description || "";
+
+
+    document.getElementById("imdb_rating").value =
+        series.imdb_rating || "";
+
+
+    document.getElementById("duration").value =
+        series.duration || "";
+
+
+    document.getElementById("release_date").value =
+        series.release_date || "";
+
+
+    setMultipleSelect(
+        "genre",
+        series.genre || []
+    );
+
+
+    setMultipleSelect(
+        "country",
+        series.country || []
+    );
+
+
+    setMultipleSelect(
+        "language",
+        series.language || []
+    );
+
+
+    await loadRoles();
+
+    await loadSeasons();
+
+}
+
+
+/* =========================================================
+   MULTIPLE SELECT
+========================================================= */
+
+
+function setMultipleSelect(
+    id,
+    values
+) {
+
+    const select =
+        document.getElementById(id);
+
+
+    values.forEach(value => {
+
+        const option =
+            select.querySelector(
+                `option[value="${value}"]`
+            );
+
+
+        if (option) {
+
+            option.selected = true;
+
+        }
+
+    });
+
+}
+
+
+/* =========================================================
+   ROLES
+========================================================= */
+
+
+async function loadRoles() {
+
+    const response =
+        await apiFetch(
+            `/content/roles/?series=${seriesId}`
+        );
+
+
+    if (!response.ok) {
+
+        console.log(
+            "Failed to load roles"
+        );
+
+        return;
+
+    }
+
+
+    const data =
+        await response.json();
+
+
+    const roles =
+        Array.isArray(data)
+            ? data
+            : data.results || [];
+
+
+    const container =
+        document.getElementById(
+            "people-container"
+        );
+
+
+    container.innerHTML = "";
+
+
+    roles.forEach(role => {
+
+        addPersonRow(
+            role.person,
+            role.role_type,
+            role.id
+        );
+
+    });
+
+}
+
+
+function addPersonRow(
+    personId = "",
+    roleType = "",
+    roleId = ""
+) {
+
+    const container =
+        document.getElementById(
+            "people-container"
+        );
+
+
+    const row =
+        document.createElement("div");
+
+
+    row.className =
+        "person-row";
+
+
+    row.dataset.roleId =
+        roleId;
+
+
+    let peopleOptions = "";
+
+
+    allPeople.forEach(person => {
+
+        peopleOptions += `
+
+            <option
+                value="${person.id}"
+                ${
+                    Number(personId) ===
+                    Number(person.id)
+                        ? "selected"
+                        : ""
+                }
+            >
+                ${person.full_name}
+            </option>
+
+        `;
+
+    });
+
+
+    row.innerHTML = `
+
+        <div>
+
+            <label>Person</label>
+
+            <select class="person-select">
+
+                <option value="">
+                    Select Person
+                </option>
+
+                ${peopleOptions}
+
+            </select>
+
+        </div>
+
+
+        <div>
+
+            <label>Role</label>
+
+            <select class="role-select">
+
+                <option value="">
+                    Select Role
+                </option>
+
+                <option
+                    value="actor"
+                    ${
+                        roleType === "actor"
+                            ? "selected"
+                            : ""
+                    }
+                >
+                    Actor
+                </option>
+
+                <option
+                    value="director"
+                    ${
+                        roleType === "director"
+                            ? "selected"
+                            : ""
+                    }
+                >
+                    Director
+                </option>
+
+                <option
+                    value="writer"
+                    ${
+                        roleType === "writer"
+                            ? "selected"
+                            : ""
+                    }
+                >
+                    Writer
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <button
+            type="button"
+            class="remove-btn"
+            onclick="removePersonRow(this)"
+        >
+            Remove
+        </button>
+
+    `;
+
+
+    container.appendChild(row);
+
+}
+
+
+async function removePersonRow(button) {
+
+    const row =
+        button.parentElement;
+
+
+    const roleId =
+        row.dataset.roleId;
+
+
+    if (roleId) {
+
+        const response =
+            await apiFetch(
+                `/content/roles/${roleId}/`,
+                {
+                    method: "DELETE"
+                }
+            );
+
+
+        if (!response.ok) {
+
+            alert(
+                "Failed to remove person."
+            );
+
+            return;
+
+        }
+
+    }
+
+
+    row.remove();
+
+}
+
+
+/* =========================================================
+   SEASONS
+========================================================= */
+
+
+async function loadSeasons() {
+
+    console.log("LOADING SEASONS FOR SERIES:", seriesId);
+
+    const response =
+        await fetch(
+            `http://127.0.0.1:8000/content/seasons/?series=${seriesId}`,
+            {
+                headers: {
+                    "Authorization":
+                        `Bearer ${accessToken}`
+                }
+            }
+        );
+
+
+    console.log(
+        "SEASONS RESPONSE STATUS:",
+        response.status
+    );
+
+
+    if (!response.ok) {
+
+        console.log(
+            "Failed to load seasons"
+        );
+
+        return;
+
+    }
+
+
+    const data =
+        await response.json();
+
+
+    console.log(
+        "SEASONS DATA:",
+        data
+    );
+
+
+    const seasons =
+        Array.isArray(data)
+            ? data
+            : data.results;
+
+
+    console.log(
+        "SEASONS ARRAY:",
+        seasons
+    );
+
+
+    const container =
+        document.getElementById(
+            "seasons-container"
+        );
+
+
+    console.log(
+        "SEASONS CONTAINER:",
+        container
+    );
+
+
+    container.innerHTML = "";
+
+
+    seasons.forEach(season => {
+
+        console.log(
+            "ADDING SEASON:",
+            season
+        );
+
+        addSeasonRow(season);
+
+    });
+
+
+    console.log(
+        "TOTAL SEASON ROWS:",
+        container.querySelectorAll(
+            ".season-row"
+        ).length
+    );
+
+}
+
+function addSeasonRow(season = null) {
+
+    const container =
+        document.getElementById("seasons-container");
+
+    const row =
+        document.createElement("div");
+
+    row.className = "season-row";
+
+    row.dataset.seasonId =
+        season ? season.id : "";
+
+    row.innerHTML = `
+
+        <div>
+
+            <label>
+                Season Number
+            </label>
+
+            <input
+                type="number"
+                class="season-number"
+                min="1"
+                value="${
+                    season
+                        ? season.season_number
+                        : ""
+                }"
+            >
+
+        </div>
+
+        <div class="episodes-container">
+        </div>
+
+        <button
+            type="button"
+            class="add-btn"
+            onclick="addEpisodeRow(this)"
+        >
+            + Add Episode
+        </button>
+
+        <button
+            type="button"
+            class="remove-btn"
+            onclick="removeSeasonRow(this)"
+        >
+            Remove Season
+        </button>
+
+    `;
+
+    container.appendChild(row);
+
+
+    /*
+        Existing episodes
+    */
+
+    if (
+        season &&
+        Array.isArray(season.episode_season)
+    ) {
+
+        const addEpisodeButton =
+            row.querySelector(
+                ".add-btn"
+            );
+
+        season.episode_season.forEach(
+            episode => {
+
+                addEpisodeRow(
+                    addEpisodeButton,
+                    episode
+                );
+
+            }
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   REMOVE SEASON
+========================================================= */
+
+
+async function removeSeasonRow(button) {
+
+    const row =
+        button.parentElement;
+
+
+    const seasonId =
+        row.dataset.seasonId;
+
+
+    if (seasonId) {
+
+        const response =
+            await apiFetch(
+                `/content/seasons/${seasonId}/`,
+                {
+                    method: "DELETE"
+                }
+            );
+
+
+        if (!response.ok) {
+
+            alert(
+                "Failed to remove season."
+            );
+
+            return;
+
+        }
+
+
+        /*
+            Remove from local server list too.
+        */
+
+
+        serverSeasons =
+            serverSeasons.filter(
+                season =>
+                    String(season.id) !==
+                    String(seasonId)
+            );
+
+    }
+
+
+    row.remove();
+
+}
+
+
+/* =========================================================
+   EPISODES
+========================================================= */
+
+function addEpisodeRow(
+    button,
+    episode = null
+) {
+
+    const seasonRow =
+        button.closest(".season-row");
+
+
+    if (!seasonRow) {
+
+        console.error(
+            "Season row not found"
+        );
+
+        return;
+
+    }
+
+
+    const container =
+        seasonRow.querySelector(
+            ".episodes-container"
+        );
+
+
+    if (!container) {
+
+        console.error(
+            "Episodes container not found",
+            seasonRow
+        );
+
+        return;
+
+    }
+
+
+    const row =
+        document.createElement("div");
+
+
+    row.className =
+        "episode-row";
+
+
+    row.dataset.episodeId =
+        episode
+            ? episode.id
+            : "";
+
+
+    row.innerHTML = `
+
+        <div class="episode-header">
+
+            <div>
+
+                <label>
+                    Episode Number
+                </label>
+
+                <input
+                    type="number"
+                    class="episode-number"
+                    min="1"
+                    value="${
+                        episode
+                            ? episode.episode_number
+                            : ""
+                    }"
+                >
+
+            </div>
+
+
+            <button
+                type="button"
+                class="remove-btn"
+                onclick="removeEpisodeRow(this)"
+            >
+                Remove Episode
+            </button>
+
+        </div>
+
+
+        <div class="links-container">
+        </div>
+
+
+        <button
+            type="button"
+            class="add-btn"
+            onclick="addEpisodeLinkRow(this)"
+        >
+            + Add Episode Link
+        </button>
+
+    `;
+
+
+    container.appendChild(row);
+
+
+    /*
+        Existing episode links
+    */
+
+    if (
+        episode &&
+        Array.isArray(episode.episode_link)
+    ) {
+
+        const addLinkButton =
+            row.querySelector(
+                ".add-btn"
+            );
+
+        episode.episode_link.forEach(
+            link => {
+
+                addEpisodeLinkRow(
+                    addLinkButton,
+                    link
+                );
+
+            }
+        );
+
+    }
+
+}
+
+/* =========================================================
+   REMOVE EPISODE
+========================================================= */
+
+
+async function removeEpisodeRow(button) {
+
+    const row =
+        button.parentElement.parentElement;
+
+
+    const episodeId =
+        row.dataset.episodeId;
+
+
+    if (episodeId) {
+
+        const response =
+            await apiFetch(
+                `/content/episodes/${episodeId}/`,
+                {
+                    method: "DELETE"
+                }
+            );
+
+
+        if (!response.ok) {
+
+            alert(
+                "Failed to remove episode."
+            );
+
+            return;
+
+        }
+
+    }
+
+
+    row.remove();
+
+}
+
+
+/* =========================================================
+   EPISODE LINKS
+========================================================= */
+
+
+function addEpisodeLinkRow(
+    button,
+    link = null
+) {
+
+    const episodeRow =
+        button.parentElement;
+
+
+    const container =
+        episodeRow.querySelector(
+            ".links-container"
+        );
+
+
+    const row =
+        document.createElement("div");
+
+
+    row.className =
+        "link-row";
+
+
+    row.dataset.linkId =
+        link
+            ? String(link.id)
+            : "";
+
+
+    let qualityOptions = "";
+
+
+    allQualities.forEach(
+        quality => {
+
+            qualityOptions += `
+
+                <option
+                    value="${quality.id}"
+                    ${
+                        link &&
+                        Number(link.quality) ===
+                        Number(quality.id)
+                            ? "selected"
+                            : ""
+                    }
+                >
+                    ${quality.name}
+                </option>
+
+            `;
+
+        }
+    );
+
+
+    row.innerHTML = `
+
+        <div>
+
+            <label>Quality</label>
+
+            <select class="quality-select">
+
+                <option value="">
+                    Select Quality
+                </option>
+
+                ${qualityOptions}
+
+            </select>
+
+        </div>
+
+
+        <div>
+
+            <label>Encoder</label>
+
+            <input
+                type="text"
+                class="encoder"
+                value="${
+                    link
+                        ? link.encoder || ""
+                        : ""
+                }"
+            >
+
+        </div>
+
+
+        <div>
+
+            <label>Size MB</label>
+
+            <input
+                type="number"
+                class="size-mb"
+                value="${
+                    link
+                        ? link.size_mb || ""
+                        : ""
+                }"
+            >
+
+        </div>
+
+
+        <div>
+
+            <label>Subtitle</label>
+
+            <select class="sub-chose">
+
+                <option
+                    value="original"
+                    ${
+                        link &&
+                        link.sub_chose ===
+                        "original"
+                            ? "selected"
+                            : ""
+                    }
+                >
+                    Original
+                </option>
+
+                <option
+                    value="subtitle"
+                    ${
+                        link &&
+                        link.sub_chose ===
+                        "subtitle"
+                            ? "selected"
+                            : ""
+                    }
+                >
+                    Subtitle
+                </option>
+
+                <option
+                    value="dubbed"
+                    ${
+                        link &&
+                        link.sub_chose ===
+                        "dubbed"
+                            ? "selected"
+                            : ""
+                    }
+                >
+                    Dubbed
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div>
+
+            <label>URL</label>
+
+            <input
+                type="url"
+                class="link-url"
+                value="${
+                    link
+                        ? link.url || ""
+                        : ""
+                }"
+            >
+
+        </div>
+
+
+        <div>
+
+            <label>Subtitle File</label>
+
+            <input
+                type="file"
+                class="sub-file"
+            >
+
+        </div>
+
+
+        <button
+            type="button"
+            class="remove-btn"
+            onclick="removeEpisodeLinkRow(this)"
+        >
+            Remove Link
+        </button>
+
+    `;
+
+
+    container.appendChild(row);
+
+}
+
+
+/* =========================================================
+   REMOVE EPISODE LINK
+========================================================= */
+
+
+async function removeEpisodeLinkRow(button) {
+
+    const row =
+        button.parentElement;
+
+
+    const linkId =
+        row.dataset.linkId;
+
+
+    if (linkId) {
+
+        const response =
+            await apiFetch(
+                `/content/episode-streams/${linkId}/`,
+                {
+                    method: "DELETE"
+                }
+            );
+
+
+        if (!response.ok) {
+
+            alert(
+                "Failed to remove episode link."
+            );
+
+            return;
+
+        }
+
+    }
+
+
+    row.remove();
+
+}
+
+
+/* =========================================================
+   SAVE SERIES
+========================================================= */
+
+
+document.getElementById(
+    "seriesForm"
+).addEventListener(
+    "submit",
+    async function(event) {
+
+        event.preventDefault();
+
+
+        let saveFailed = false;
+
+
+        /* -------------------------------------------------
+           SERIES
+        ------------------------------------------------- */
+
+
+        const genre =
+            Array.from(
+                document.getElementById(
+                    "genre"
+                ).selectedOptions
+            ).map(
+                option =>
+                    Number(option.value)
+            );
+
+
+        const country =
+            Array.from(
+                document.getElementById(
+                    "country"
+                ).selectedOptions
+            ).map(
+                option =>
+                    Number(option.value)
+            );
+
+
+        const language =
+            Array.from(
+                document.getElementById(
+                    "language"
+                ).selectedOptions
+            ).map(
+                option =>
+                    Number(option.value)
+            );
+
+
+        const seriesData = {
+
+            title:
+                document.getElementById(
+                    "title"
+                ).value,
+
+            poster_url:
+                document.getElementById(
+                    "poster_url"
+                ).value,
+
+            description:
+                document.getElementById(
+                    "description"
+                ).value,
+
+            imdb_rating:
+                document.getElementById(
+                    "imdb_rating"
+                ).value,
+
+            duration:
+                document.getElementById(
+                    "duration"
+                ).value,
+
+            release_date:
+                document.getElementById(
+                    "release_date"
+                ).value,
+
+            genre,
+            country,
+            language
+
+        };
+
+
+        const seriesResponse =
+            await apiFetch(
+                `/content/series/${seriesId}/`,
+                {
+                    method: "PATCH",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify(
+                            seriesData
+                        )
+                }
+            );
+
+
+        if (!seriesResponse.ok) {
+
+            console.log(
+                "SERIES ERROR:",
+                await seriesResponse.json()
+            );
+
+            alert(
+                "Failed to update series."
+            );
+
+            return;
+
+        }
+
+
+        /* -------------------------------------------------
+           PEOPLE
+        ------------------------------------------------- */
+
+
+        const peopleRows =
+            document.querySelectorAll(
+                ".person-row"
+            );
+
+
+        for (
+            const row
+            of peopleRows
+        ) {
+
+            const roleId =
+                row.dataset.roleId;
+
+
+            const person =
+                row.querySelector(
+                    ".person-select"
+                ).value;
+
+
+            const roleType =
+                row.querySelector(
+                    ".role-select"
+                ).value;
+
+
+            if (
+                !person ||
+                !roleType
+            ) {
+
+                continue;
+
+            }
+
+
+            const roleData = {
+
+                person:
+                    Number(person),
+
+                role_type:
+                    roleType,
+
+                series:
+                    Number(seriesId)
+
+            };
+
+
+            let response;
+
+
+            if (roleId) {
+
+                response =
+                    await apiFetch(
+                        `/content/roles/${roleId}/`,
+                        {
+                            method: "PATCH",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body:
+                                JSON.stringify(
+                                    roleData
+                                )
+                        }
+                    );
+
+            } else {
+
+                response =
+                    await apiFetch(
+                        "/content/roles/",
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body:
+                                JSON.stringify(
+                                    roleData
+                                )
+                        }
+                    );
+
+            }
+
+
+            if (!response.ok) {
+
+                saveFailed = true;
+
+                console.log(
+                    "ROLE ERROR:",
+                    await response.json()
+                );
+
+            }
+
+        }
+
+
+        /* -------------------------------------------------
+           IMPORTANT:
+           REFRESH SERVER SEASONS BEFORE SAVING
+        ------------------------------------------------- */
+
+
+        const seasonRefresh =
+            await apiFetch(
+                `/content/seasons/?series=${seriesId}`
+            );
+
+
+        if (seasonRefresh.ok) {
+
+            const data =
+                await seasonRefresh.json();
+
+
+            serverSeasons =
+                Array.isArray(data)
+                    ? data
+                    : data.results || [];
+
+        }
+
+
+        /* -------------------------------------------------
+           SEASONS
+        ------------------------------------------------- */
+
+
+        const seasonRows =
+            document.querySelectorAll(
+                ".season-row"
+            );
+
+
+        for (
+            const seasonRow
+            of seasonRows
+        ) {
+
+            let seasonId =
+                seasonRow.dataset.seasonId;
+
+
+            const seasonNumber =
+                Number(
+                    seasonRow.querySelector(
+                        ".season-number"
+                    ).value
+                );
+
+
+            if (!seasonNumber) {
+
+                continue;
+
+            }
+
+
+            /*
+                ------------------------------------------------
+                SAFETY CHECK
+
+                If frontend lost the season ID,
+                find the existing season from database
+                using series + season_number.
+                ------------------------------------------------
+            */
+
+
+            if (!seasonId) {
+
+                const existingSeason =
+                    serverSeasons.find(
+                        season =>
+                            Number(
+                                season.season_number
+                            ) === seasonNumber
+                    );
+
+
+                if (existingSeason) {
+
+                    seasonId =
+                        String(
+                            existingSeason.id
+                        );
+
+
+                    seasonRow.dataset.seasonId =
+                        seasonId;
+
+
+                    console.log(
+                        "FOUND EXISTING SEASON:",
+                        seasonNumber,
+                        seasonId
+                    );
+
+                }
+
+            }
+
+
+            /* ------------------------------------------------
+               EXISTING SEASON
+            ------------------------------------------------ */
+
+
+            if (seasonId) {
+
+                const existingSeason =
+                    serverSeasons.find(
+                        season =>
+                            String(season.id) ===
+                            String(seasonId)
+                    );
+
+
+                /*
+                    Only PATCH season number if it
+                    actually changed.
+                */
+
+
+                if (
+                    existingSeason &&
+                    Number(
+                        existingSeason.season_number
+                    ) !== seasonNumber
+                ) {
+
+                    /*
+                        Before changing the number,
+                        check whether another season
+                        already has that number.
+                    */
+
+
+                    const duplicate =
+                        serverSeasons.find(
+                            season =>
+                                String(season.id) !==
+                                String(seasonId) &&
+
+                                Number(
+                                    season.season_number
+                                ) === seasonNumber
+                        );
+
+
+                    if (duplicate) {
+
+                        saveFailed = true;
+
+                        console.log(
+                            "SEASON NUMBER ALREADY EXISTS:",
+                            seasonNumber
+                        );
+
+                        alert(
+                            `Season ${seasonNumber} already exists.`
+                        );
+
+                        continue;
+
+                    }
+
+
+                    const response =
+                        await apiFetch(
+                            `/content/seasons/${seasonId}/`,
+                            {
+                                method: "PATCH",
+
+                                headers: {
+                                    "Content-Type":
+                                        "application/json"
+                                },
+
+                                body:
+                                    JSON.stringify({
+                                        season_number:
+                                            seasonNumber
+                                    })
+                            }
+                        );
+
+
+                    if (!response.ok) {
+
+                        saveFailed = true;
+
+                        console.log(
+                            "SEASON UPDATE ERROR:",
+                            await response.json()
+                        );
+
+                        continue;
+
+                    }
+
+
+                    /*
+                        Update local state.
+                    */
+
+
+                    if (existingSeason) {
+
+                        existingSeason.season_number =
+                            seasonNumber;
+
+                    }
+
+                }
+
+            }
+
+
+            /* ------------------------------------------------
+               NEW SEASON
+            ------------------------------------------------ */
+
+
+            else {
+
+                /*
+                    Final database-side check through API.
+
+                    We already refreshed serverSeasons above,
+                    so this should only happen when the number
+                    truly doesn't exist.
+                */
+
+
+                const alreadyExists =
+                    serverSeasons.find(
+                        season =>
+                            Number(
+                                season.season_number
+                            ) === seasonNumber
+                    );
+
+
+                if (alreadyExists) {
+
+                    seasonId =
+                        String(
+                            alreadyExists.id
+                        );
+
+
+                    seasonRow.dataset.seasonId =
+                        seasonId;
+
+                } else {
+
+                    const response =
+                        await apiFetch(
+                            "/content/seasons/",
+                            {
+                                method: "POST",
+
+                                headers: {
+                                    "Content-Type":
+                                        "application/json"
+                                },
+
+                                body:
+                                    JSON.stringify({
+
+                                        series:
+                                            Number(
+                                                seriesId
+                                            ),
+
+                                        season_number:
+                                            seasonNumber
+
+                                    })
+                            }
+                        );
+
+
+                    if (!response.ok) {
+
+                        saveFailed = true;
+
+                        console.log(
+                            "SEASON CREATE ERROR:",
+                            await response.json()
+                        );
+
+                        continue;
+
+                    }
+
+
+                    const createdSeason =
+                        await response.json();
+
+
+                    seasonId =
+                        String(
+                            createdSeason.id
+                        );
+
+
+                    seasonRow.dataset.seasonId =
+                        seasonId;
+
+
+                    serverSeasons.push(
+                        createdSeason
+                    );
+
+                }
+
+            }
+
+
+            /* ------------------------------------------------
+               EPISODES
+            ------------------------------------------------ */
+
+
+            const episodeRows =
+                seasonRow.querySelectorAll(
+                    ".episode-row"
+                );
+
+
+            for (
+                const episodeRow
+                of episodeRows
+            ) {
+
+                const episodeId =
+                    episodeRow.dataset.episodeId;
+
+
+                const episodeNumber =
+                    Number(
+                        episodeRow.querySelector(
+                            ".episode-number"
+                        ).value
+                    );
+
+
+                if (
+                    !seasonId ||
+                    !episodeNumber
+                ) {
+
+                    continue;
+
+                }
+
+
+                let currentEpisodeId =
+                    episodeId;
+
+
+                /* --------------------------------------------
+                   EXISTING EPISODE
+                -------------------------------------------- */
+
+
+                if (episodeId) {
+
+                    const response =
+                        await apiFetch(
+                            `/content/episodes/${episodeId}/`,
+                            {
+                                method: "PATCH",
+
+                                headers: {
+                                    "Content-Type":
+                                        "application/json"
+                                },
+
+                                body:
+                                    JSON.stringify({
+
+                                        season:
+                                            Number(
+                                                seasonId
+                                            ),
+
+                                        episode_number:
+                                            episodeNumber
+
+                                    })
+                            }
+                        );
+
+
+                    if (!response.ok) {
+
+                        saveFailed = true;
+
+                        console.log(
+                            "EPISODE UPDATE ERROR:",
+                            await response.json()
+                        );
+
+                        continue;
+
+                    }
+
+                }
+
+
+                /* --------------------------------------------
+                   NEW EPISODE
+                -------------------------------------------- */
+
+
+                else {
+
+                    const response =
+                        await apiFetch(
+                            "/content/episodes/",
+                            {
+                                method: "POST",
+
+                                headers: {
+                                    "Content-Type":
+                                        "application/json"
+                                },
+
+                                body:
+                                    JSON.stringify({
+
+                                        season:
+                                            Number(
+                                                seasonId
+                                            ),
+
+                                        episode_number:
+                                            episodeNumber
+
+                                    })
+                            }
+                        );
+
+
+                    if (!response.ok) {
+
+                        saveFailed = true;
+
+                        console.log(
+                            "EPISODE CREATE ERROR:",
+                            await response.json()
+                        );
+
+                        continue;
+
+                    }
+
+
+                    const createdEpisode =
+                        await response.json();
+
+
+                    currentEpisodeId =
+                        createdEpisode.id;
+
+
+                    episodeRow.dataset.episodeId =
+                        String(
+                            currentEpisodeId
+                        );
+
+                }
+
+
+                /* ------------------------------------------------
+                   EPISODE LINKS
+                ------------------------------------------------ */
+
+
+                const linkRows =
+                    episodeRow.querySelectorAll(
+                        ".link-row"
+                    );
+
+
+                for (
+                    const linkRow
+                    of linkRows
+                ) {
+
+                    const linkId =
+                        linkRow.dataset.linkId;
+
+
+                    const quality =
+                        linkRow.querySelector(
+                            ".quality-select"
+                        ).value;
+
+
+                    const encoder =
+                        linkRow.querySelector(
+                            ".encoder"
+                        ).value;
+
+
+                    const sizeMb =
+                        linkRow.querySelector(
+                            ".size-mb"
+                        ).value;
+
+
+                    const subChose =
+                        linkRow.querySelector(
+                            ".sub-chose"
+                        ).value;
+
+
+                    const url =
+                        linkRow.querySelector(
+                            ".link-url"
+                        ).value;
+
+
+                    const fileInput =
+                        linkRow.querySelector(
+                            ".sub-file"
+                        );
+
+
+                    if (
+                        !quality ||
+                        !encoder ||
+                        !sizeMb ||
+                        !url
+                    ) {
+
+                        continue;
+
+                    }
+
+
+                    const formData =
+                        new FormData();
+
+
+                    formData.append(
+                        "episode",
+                        String(
+                            currentEpisodeId
+                        )
+                    );
+
+
+                    formData.append(
+                        "quality",
+                        quality
+                    );
+
+
+                    formData.append(
+                        "encoder",
+                        encoder
+                    );
+
+
+                    formData.append(
+                        "size_mb",
+                        sizeMb
+                    );
+
+
+                    formData.append(
+                        "sub_chose",
+                        subChose
+                    );
+
+
+                    formData.append(
+                        "url",
+                        url
+                    );
+
+
+                    if (
+                        fileInput.files.length > 0
+                    ) {
+
+                        formData.append(
+                            "sub_file",
+                            fileInput.files[0]
+                        );
+
+                    }
+
+
+                    let linkResponse;
+
+
+                    if (linkId) {
+
+                        linkResponse =
+                            await apiFetch(
+                                `/content/episode-streams/${linkId}/`,
+                                {
+                                    method: "PATCH",
+
+                                    body:
+                                        formData
+                                }
+                            );
+
+                    } else {
+
+                        linkResponse =
+                            await apiFetch(
+                                "/content/episode-streams/",
+                                {
+                                    method: "POST",
+
+                                    body:
+                                        formData
+                                }
+                            );
+
+                    }
+
+
+                    if (!linkResponse.ok) {
+
+                        saveFailed = true;
+
+                        console.log(
+                            "LINK ERROR:",
+                            await linkResponse.json()
+                        );
+
+                    }
+
+                }
+
+            }
+
+        }
+
+
+        /* =====================================================
+           RESULT
+        ===================================================== */
+
+
+        if (saveFailed) {
+
+            alert(
+                "Series was updated, but some changes failed. Check console."
+            );
+
+            return;
+
+        }
+
+
+        alert(
+            "Series updated successfully."
+        );
+
+
+        window.location.href =
+            "series.html";
+
+    }
+);
+
+
+/* =========================================================
+   INIT
+========================================================= */
+
+
+async function init() {
+
+
+    /* GENRES */
+
+    const genres =
+        await loadOptions(
+            "/catalog/genres/"
+        );
+
+
+    const genreSelect =
+        document.getElementById(
+            "genre"
+        );
+
+
+    genres.forEach(item => {
+
+        const option =
+            document.createElement(
+                "option"
+            );
+
+
+        option.value =
+            item.id;
+
+
+        option.textContent =
+            item.name;
+
+
+        genreSelect.appendChild(
+            option
+        );
+
+    });
+
+
+    /* COUNTRIES */
+
+    const countries =
+        await loadOptions(
+            "/catalog/countries/"
+        );
+
+
+    const countrySelect =
+        document.getElementById(
+            "country"
+        );
+
+
+    countries.forEach(item => {
+
+        const option =
+            document.createElement(
+                "option"
+            );
+
+
+        option.value =
+            item.id;
+
+
+        option.textContent =
+            item.name;
+
+
+        countrySelect.appendChild(
+            option
+        );
+
+    });
+
+
+    /* LANGUAGES */
+
+    const languages =
+        await loadOptions(
+            "/catalog/languages/"
+        );
+
+
+    const languageSelect =
+        document.getElementById(
+            "language"
+        );
+
+
+    languages.forEach(item => {
+
+        const option =
+            document.createElement(
+                "option"
+            );
+
+
+        option.value =
+            item.id;
+
+
+        option.textContent =
+            item.name;
+
+
+        languageSelect.appendChild(
+            option
+        );
+
+    });
+
+
+    await loadPeople();
+
+    await loadQualities();
+
+    await loadSeries();
+
+}
+
+
+init();
+
+</script>
+
+</body>
+
+</html>
+

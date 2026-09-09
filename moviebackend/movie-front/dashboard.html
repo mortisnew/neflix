@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Admin - Dashboard</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f6fa;
+            color: #222;
+        }
+
+        .navbar {
+            background: #1f2937;
+            color: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar h2 {
+            margin: 0;
+        }
+
+        .logout {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .container {
+            padding: 40px;
+        }
+
+        .container h1 {
+            margin-bottom: 30px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        .card h3 {
+            margin-top: 0;
+        }
+
+        .count {
+            font-size: 35px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .buttons a {
+            text-decoration: none;
+            padding: 9px 15px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .add {
+            background: #2563eb;
+            color: white;
+        }
+
+        .manage {
+            background: #e5e7eb;
+            color: #222;
+        }
+
+        @media (max-width: 900px) {
+            .cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .cards {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="navbar">
+        <h2>Movie Admin</h2>
+        <button class="logout">Logout</button>
+    </div>
+
+    <div class="container">
+
+        <h1>Dashboard</h1>
+
+        <div class="cards">
+
+            <!-- Movies -->
+            <div class="card">
+                <h3>🎬 Movies</h3>
+
+                <div class="count">
+                    0
+                </div>
+
+                <div class="buttons">
+                    <a href="add-movie.html" class="add">Add</a>
+                    <a href="movie.html" class="manage">Manage</a>
+                </div>
+            </div>
+
+            <!-- Series -->
+            <div class="card">
+                <h3>📺 Series</h3>
+
+                <div class="count">
+                    0
+                </div>
+
+                <div class="buttons">
+                    <a href="add-series.html" class="add">Add</a>
+                    <a href="series.html" class="manage">Manage</a>
+                </div>
+            </div>
+
+            <!-- People -->
+            <div class="card">
+                <h3>👤 People</h3>
+
+                <div class="count">
+                    0
+                </div>
+
+                <div class="buttons">
+                    <a href="add-people.html" class="add">Add</a>
+                    <a href="people.html" class="manage">Manage</a>
+                </div>
+            </div>
+
+            <!-- Folders -->
+            <div class="card">
+                <h3>📁 Folders</h3>
+
+                <div class="count">
+                    0
+                </div>
+
+                <div class="buttons">
+                    <a href="add-folder.html" class="add">Add</a>
+                    <a href="folders.html" class="manage">Manage</a>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+          <script>
+              const accessToken = localStorage.getItem("access_token");
+
+              async function getCount(url) {
+                  const response = await fetch(url, {
+                      headers: {
+                          "Authorization": `Bearer ${accessToken}`
+                      }
+                  });
+
+                  if (!response.ok) {
+                      return 0;
+                  }
+
+                  const data = await response.json();
+
+                  if (Array.isArray(data)) {
+                      return data.length;
+                  }
+
+                  return data.count || 0;
+              }
+
+              async function loadDashboard() {
+                      const moviesCount = await getCount("http://127.0.0.1:8000/content/movies/");
+                      const seriesCount = await getCount("http://127.0.0.1:8000/content/series/");
+                      const peopleCount = await getCount("http://127.0.0.1:8000/people/people/");
+                      const foldersCount = await getCount("http://127.0.0.1:8000/special/folders/");
+                      document.querySelectorAll(".count")[0].textContent = moviesCount;
+                      document.querySelectorAll(".count")[1].textContent = seriesCount;
+                      document.querySelectorAll(".count")[2].textContent = peopleCount;
+                      document.querySelectorAll(".count")[3].textContent = foldersCount;
+
+              }
+
+              loadDashboard();
+          </script>
+</body>
+</html>

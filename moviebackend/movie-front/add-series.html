@@ -1,0 +1,1516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Add Series</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f6fa;
+            color: #222;
+        }
+
+        .navbar {
+            background: #1f2937;
+            color: white;
+            padding: 20px 40px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar h2 {
+            margin: 0;
+        }
+
+        .back {
+            color: white;
+            text-decoration: none;
+            background: #374151;
+            padding: 10px 18px;
+            border-radius: 6px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 30px;
+
+            background: white;
+            border-radius: 10px;
+
+            box-shadow: 0 3px 10px rgba(0,0,0,.08);
+        }
+
+        h1 {
+            margin-top: 0;
+        }
+
+        h2 {
+            margin-top: 40px;
+        }
+
+        h3 {
+            margin-top: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 11px;
+
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+
+            font-size: 15px;
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        select[multiple] {
+            min-height: 130px;
+        }
+
+        .people-container,
+        .seasons-container,
+        .episodes-container,
+        .links-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .person-row {
+            display: grid;
+            grid-template-columns: 1fr 200px auto;
+            gap: 10px;
+            align-items: end;
+
+            padding: 15px;
+
+            border: 1px solid #ddd;
+            border-radius: 8px;
+
+            background: #fafafa;
+        }
+
+        .season-row {
+            padding: 20px;
+
+            border: 1px solid #ddd;
+            border-radius: 8px;
+
+            background: #fafafa;
+        }
+
+        .episode-row {
+            margin-top: 15px;
+
+            padding: 15px;
+
+            border: 1px solid #ddd;
+            border-radius: 8px;
+
+            background: white;
+        }
+
+        .link-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+
+            gap: 10px;
+
+            margin-top: 15px;
+
+            padding: 15px;
+
+            border: 1px solid #ddd;
+            border-radius: 8px;
+
+            background: #fafafa;
+        }
+
+        .add-btn {
+            background: #2563eb;
+            color: white;
+
+            border: none;
+            border-radius: 6px;
+
+            padding: 11px 20px;
+
+            cursor: pointer;
+
+            margin-top: 10px;
+        }
+
+        .remove-btn {
+            background: #ef4444;
+            color: white;
+
+            border: none;
+            border-radius: 6px;
+
+            padding: 10px 15px;
+
+            cursor: pointer;
+        }
+
+        .add-small {
+            background: #374151;
+            color: white;
+
+            border: none;
+            border-radius: 6px;
+
+            padding: 9px 15px;
+
+            cursor: pointer;
+
+            margin-top: 10px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 40px;
+        }
+
+        .save {
+            background: #2563eb;
+            color: white;
+
+            border: none;
+            border-radius: 6px;
+
+            padding: 12px 25px;
+
+            cursor: pointer;
+        }
+
+        .cancel {
+            background: #e5e7eb;
+            color: #222;
+
+            text-decoration: none;
+
+            padding: 12px 25px;
+
+            border-radius: 6px;
+        }
+
+        @media (max-width: 800px) {
+
+            .person-row,
+            .link-row {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                margin: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="navbar">
+
+    <h2>Movie Admin</h2>
+
+    <a href="series.html" class="back">
+        Series
+    </a>
+
+</div>
+
+
+<div class="container">
+
+    <h1>Add Series</h1>
+
+    <form id="seriesForm">
+
+        <h2>Basic Information</h2>
+
+        <div class="form-group">
+            <label>Title</label>
+
+            <input
+                type="text"
+                id="title"
+                required
+            >
+        </div>
+
+
+        <div class="form-group">
+            <label>Poster URL</label>
+
+            <input
+                type="url"
+                id="poster_url"
+                required
+            >
+        </div>
+
+
+        <div class="form-group">
+            <label>Description</label>
+
+            <textarea id="description"></textarea>
+        </div>
+
+
+        <div class="form-group">
+            <label>IMDb Rating</label>
+
+            <input
+                type="number"
+                id="imdb_rating"
+                min="1"
+                max="10"
+                step="0.01"
+                required
+            >
+        </div>
+
+
+        <div class="form-group">
+            <label>Duration</label>
+
+            <input
+                type="number"
+                id="duration"
+                required
+            >
+        </div>
+
+
+        <div class="form-group">
+            <label>Release Date</label>
+
+            <input
+                type="date"
+                id="release_date"
+                required
+            >
+        </div>
+
+
+        <h2>Catalog</h2>
+
+
+        <div class="form-group">
+
+            <label>Genre</label>
+
+            <select id="genre" multiple></select>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>Country</label>
+
+            <select id="country" multiple></select>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>Language</label>
+
+            <select id="language" multiple></select>
+
+        </div>
+
+
+        <h2>People</h2>
+
+        <div
+            id="people-container"
+            class="people-container"
+        ></div>
+
+
+        <button
+            type="button"
+            class="add-btn"
+            onclick="addPersonRow()"
+        >
+            + Add Person
+        </button>
+
+
+        <h2>Seasons</h2>
+
+        <div
+            id="seasons-container"
+            class="seasons-container"
+        ></div>
+
+
+        <button
+            type="button"
+            class="add-btn"
+            onclick="addSeasonRow()"
+        >
+            + Add Season
+        </button>
+
+
+        <div class="actions">
+
+            <button
+                type="submit"
+                class="save"
+            >
+                Create Series
+            </button>
+
+            <a
+                href="series.html"
+                class="cancel"
+            >
+                Cancel
+            </a>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+<script>
+
+const accessToken =
+    localStorage.getItem("access_token");
+
+
+let allPeople = [];
+
+let allQualities = [];
+
+
+/* -------------------------
+   LOAD OPTIONS
+------------------------- */
+
+
+async function loadOptions(url) {
+
+    const response =
+        await fetch(
+            `http://127.0.0.1:8000${url}`,
+            {
+                headers: {
+                    "Authorization":
+                        `Bearer ${accessToken}`
+                }
+            }
+        );
+
+
+    if (!response.ok) {
+
+        console.log(
+            "Failed to load:",
+            url
+        );
+
+        return [];
+    }
+
+
+    const data =
+        await response.json();
+
+
+    return Array.isArray(data)
+        ? data
+        : data.results;
+
+}
+
+
+/* -------------------------
+   CATALOG
+------------------------- */
+
+
+async function loadCatalog() {
+
+    const genres =
+        await loadOptions(
+            "/catalog/genres/"
+        );
+
+
+    const genreSelect =
+        document.getElementById("genre");
+
+
+    genres.forEach(item => {
+
+        const option =
+            document.createElement("option");
+
+        option.value = item.id;
+
+        option.textContent = item.name;
+
+        genreSelect.appendChild(option);
+
+    });
+
+
+    const countries =
+        await loadOptions(
+            "/catalog/countries/"
+        );
+
+
+    const countrySelect =
+        document.getElementById("country");
+
+
+    countries.forEach(item => {
+
+        const option =
+            document.createElement("option");
+
+        option.value = item.id;
+
+        option.textContent = item.name;
+
+        countrySelect.appendChild(option);
+
+    });
+
+
+    const languages =
+        await loadOptions(
+            "/catalog/languages/"
+        );
+
+
+    const languageSelect =
+        document.getElementById("language");
+
+
+    languages.forEach(item => {
+
+        const option =
+            document.createElement("option");
+
+        option.value = item.id;
+
+        option.textContent = item.name;
+
+        languageSelect.appendChild(option);
+
+    });
+
+}
+
+
+/* -------------------------
+   PEOPLE
+------------------------- */
+
+
+async function loadPeople() {
+
+    allPeople =
+        await loadOptions(
+            "/people/people/"
+        );
+
+}
+
+
+function addPersonRow() {
+
+    const container =
+        document.getElementById(
+            "people-container"
+        );
+
+
+    const row =
+        document.createElement("div");
+
+
+    row.className =
+        "person-row";
+
+
+    let peopleOptions = "";
+
+
+    allPeople.forEach(person => {
+
+        peopleOptions += `
+
+            <option value="${person.id}">
+                ${person.full_name}
+            </option>
+
+        `;
+
+    });
+
+
+    row.innerHTML = `
+
+        <div>
+
+            <label>
+                Person
+            </label>
+
+            <select class="person-select">
+
+                <option value="">
+                    Select Person
+                </option>
+
+                ${peopleOptions}
+
+            </select>
+
+        </div>
+
+
+        <div>
+
+            <label>
+                Role
+            </label>
+
+            <select class="role-select">
+
+                <option value="">
+                    Select Role
+                </option>
+
+                <option value="actor">
+                    Actor
+                </option>
+
+                <option value="director">
+                    Director
+                </option>
+
+                <option value="writer">
+                    Writer
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <button
+            type="button"
+            class="remove-btn"
+            onclick="this.parentElement.remove()"
+        >
+            Remove
+        </button>
+
+    `;
+
+
+    container.appendChild(row);
+
+}
+
+
+/* -------------------------
+   QUALITY
+------------------------- */
+
+
+async function loadQualities() {
+
+    allQualities =
+        await loadOptions(
+            "/catalog/qualities/"
+        );
+
+}
+
+
+/* -------------------------
+   SEASON
+------------------------- */
+
+
+function addSeasonRow() {
+
+    const container =
+        document.getElementById(
+            "seasons-container"
+        );
+
+
+    const row =
+        document.createElement("div");
+
+
+    row.className =
+        "season-row";
+
+
+    row.innerHTML = `
+
+        <div class="form-group">
+
+            <label>
+                Season Number
+            </label>
+
+            <input
+                type="number"
+                class="season-number"
+                min="1"
+                required
+            >
+
+        </div>
+
+
+        <div>
+
+            <h3>
+                Episodes
+            </h3>
+
+            <div
+                class="episodes-container"
+            ></div>
+
+
+            <button
+                type="button"
+                class="add-small"
+                onclick="addEpisodeRow(this)"
+            >
+                + Add Episode
+            </button>
+
+        </div>
+
+
+        <button
+            type="button"
+            class="remove-btn"
+            onclick="this.parentElement.remove()"
+        >
+            Remove Season
+        </button>
+
+    `;
+
+
+    container.appendChild(row);
+
+}
+
+
+/* -------------------------
+   EPISODE
+------------------------- */
+
+
+function addEpisodeRow(button) {
+
+    const season =
+        button.parentElement.parentElement;
+
+
+    const container =
+        season.querySelector(
+            ".episodes-container"
+        );
+
+
+    const row =
+        document.createElement("div");
+
+
+    row.className =
+        "episode-row";
+
+
+    row.innerHTML = `
+
+        <div class="form-group">
+
+            <label>
+                Episode Number
+            </label>
+
+            <input
+                type="number"
+                class="episode-number"
+                min="1"
+                required
+            >
+
+        </div>
+
+
+        <h3>
+            Episode Links
+        </h3>
+
+
+        <div
+            class="links-container"
+        ></div>
+
+
+        <button
+            type="button"
+            class="add-small"
+            onclick="addEpisodeLink(this)"
+        >
+            + Add Episode Link
+        </button>
+
+
+        <button
+            type="button"
+            class="remove-btn"
+            onclick="this.parentElement.remove()"
+        >
+            Remove Episode
+        </button>
+
+    `;
+
+
+    container.appendChild(row);
+
+}
+
+
+/* -------------------------
+   EPISODE LINK
+------------------------- */
+
+
+function addEpisodeLink(button) {
+
+    const episode =
+        button.parentElement;
+
+
+    const container =
+        episode.querySelector(
+            ".links-container"
+        );
+
+
+    const row =
+        document.createElement("div");
+
+
+    row.className =
+        "link-row";
+
+
+    let qualityOptions = "";
+
+
+    allQualities.forEach(quality => {
+
+        qualityOptions += `
+
+            <option value="${quality.id}">
+                ${quality.name}
+            </option>
+
+        `;
+
+    });
+
+
+    row.innerHTML = `
+
+        <div>
+
+            <label>
+                Quality
+            </label>
+
+            <select class="quality-select">
+
+                <option value="">
+                    Select Quality
+                </option>
+
+                ${qualityOptions}
+
+            </select>
+
+        </div>
+
+
+        <div>
+
+            <label>
+                Encoder
+            </label>
+
+            <input
+                type="text"
+                class="encoder"
+            >
+
+        </div>
+
+
+        <div>
+
+            <label>
+                Size MB
+            </label>
+
+            <input
+                type="number"
+                class="size-mb"
+            >
+
+        </div>
+
+
+        <div>
+
+            <label>
+                Subtitle
+            </label>
+
+            <select class="sub-chose">
+
+                <option value="original">
+                    Original
+                </option>
+
+                <option value="subtitle">
+                    Subtitle
+                </option>
+
+                <option value="dubbed">
+                    Dubbed
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div>
+
+            <label>
+                URL
+            </label>
+
+            <input
+                type="url"
+                class="link-url"
+            >
+
+        </div>
+
+
+        <div>
+
+            <label>
+                Subtitle File
+            </label>
+
+            <input
+                type="file"
+                class="sub-file"
+            >
+
+        </div>
+
+
+        <button
+            type="button"
+            class="remove-btn"
+            onclick="this.parentElement.remove()"
+        >
+            Remove
+        </button>
+
+    `;
+
+
+    container.appendChild(row);
+
+}
+
+
+/* -------------------------
+   CREATE SERIES
+------------------------- */
+
+
+document.getElementById(
+    "seriesForm"
+).addEventListener(
+    "submit",
+    async function(event) {
+
+        event.preventDefault();
+
+
+        const genre =
+            Array.from(
+                document.getElementById(
+                    "genre"
+                ).selectedOptions
+            ).map(
+                option =>
+                    Number(option.value)
+            );
+
+
+        const country =
+            Array.from(
+                document.getElementById(
+                    "country"
+                ).selectedOptions
+            ).map(
+                option =>
+                    Number(option.value)
+            );
+
+
+        const language =
+            Array.from(
+                document.getElementById(
+                    "language"
+                ).selectedOptions
+            ).map(
+                option =>
+                    Number(option.value)
+            );
+
+
+        const seriesData = {
+
+            title:
+                document.getElementById(
+                    "title"
+                ).value,
+
+            poster_url:
+                document.getElementById(
+                    "poster_url"
+                ).value,
+
+            genre: genre,
+
+            country: country,
+
+            language: language,
+
+            description:
+                document.getElementById(
+                    "description"
+                ).value,
+
+            imdb_rating:
+                document.getElementById(
+                    "imdb_rating"
+                ).value,
+
+            duration:
+                document.getElementById(
+                    "duration"
+                ).value,
+
+            release_date:
+                document.getElementById(
+                    "release_date"
+                ).value
+
+        };
+
+
+        /* CREATE SERIES */
+
+
+        const seriesResponse =
+            await fetch(
+                "http://127.0.0.1:8000/content/series/",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Authorization":
+                            `Bearer ${accessToken}`,
+
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify(
+                            seriesData
+                        )
+                }
+            );
+
+
+        if (!seriesResponse.ok) {
+
+            const error =
+                await seriesResponse.json();
+
+            console.log(
+                "SERIES ERROR:",
+                error
+            );
+
+            alert(
+                "Series error: " +
+                JSON.stringify(error)
+            );
+
+            return;
+
+        }
+
+
+        const series =
+            await seriesResponse.json();
+
+
+        const seriesId =
+            series.id;
+
+
+        /* CREATE PEOPLE */
+
+
+        const peopleRows =
+            document.querySelectorAll(
+                ".person-row"
+            );
+
+
+        for (const row of peopleRows) {
+
+            const person =
+                row.querySelector(
+                    ".person-select"
+                ).value;
+
+
+            const roleType =
+                row.querySelector(
+                    ".role-select"
+                ).value;
+
+
+            if (!person || !roleType) {
+                continue;
+            }
+
+
+            const roleData = {
+
+                person:
+                    Number(person),
+
+                role_type:
+                    roleType,
+
+                series:
+                    Number(seriesId)
+
+            };
+
+
+            const response =
+                await fetch(
+                    "http://127.0.0.1:8000/content/roles/",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Authorization":
+                                `Bearer ${accessToken}`,
+
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body:
+                            JSON.stringify(
+                                roleData
+                            )
+                    }
+                );
+
+
+            if (!response.ok) {
+
+                console.log(
+                    "ROLE ERROR:",
+                    await response.json()
+                );
+
+            }
+
+        }
+
+
+        /* CREATE SEASONS */
+
+
+        const seasonRows =
+            document.querySelectorAll(
+                ".season-row"
+            );
+
+
+        for (const seasonRow of seasonRows) {
+
+            const seasonNumber =
+                seasonRow.querySelector(
+                    ".season-number"
+                ).value;
+
+
+            if (!seasonNumber) {
+                continue;
+            }
+
+
+            const seasonResponse =
+                await fetch(
+                    "http://127.0.0.1:8000/content/seasons/",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Authorization":
+                                `Bearer ${accessToken}`,
+
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body: JSON.stringify({
+
+                            series:
+                                Number(seriesId),
+
+                            season_number:
+                                Number(seasonNumber)
+
+                        })
+                    }
+                );
+
+
+            if (!seasonResponse.ok) {
+
+                console.log(
+                    "SEASON ERROR:",
+                    await seasonResponse.json()
+                );
+
+                continue;
+
+            }
+
+
+            const season =
+                await seasonResponse.json();
+
+
+            const seasonId =
+                season.id;
+
+
+            /* CREATE EPISODES */
+
+
+            const episodeRows =
+                seasonRow.querySelectorAll(
+                    ".episode-row"
+                );
+
+
+            for (const episodeRow of episodeRows) {
+
+                const episodeNumber =
+                    episodeRow.querySelector(
+                        ".episode-number"
+                    ).value;
+
+
+                if (!episodeNumber) {
+                    continue;
+                }
+
+
+                const episodeResponse =
+                    await fetch(
+                        "http://127.0.0.1:8000/content/episodes/",
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Authorization":
+                                    `Bearer ${accessToken}`,
+
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body: JSON.stringify({
+
+                                season:
+                                    Number(seasonId),
+
+                                episode_number:
+                                    Number(episodeNumber)
+
+                            })
+                        }
+                    );
+
+
+                if (!episodeResponse.ok) {
+
+                    console.log(
+                        "EPISODE ERROR:",
+                        await episodeResponse.json()
+                    );
+
+                    continue;
+
+                }
+
+
+                const episode =
+                    await episodeResponse.json();
+
+
+                const episodeId =
+                    episode.id;
+
+
+                /* CREATE EPISODE LINKS */
+
+
+                const linkRows =
+                    episodeRow.querySelectorAll(
+                        ".link-row"
+                    );
+
+
+                for (const linkRow of linkRows) {
+
+                    const quality =
+                        linkRow.querySelector(
+                            ".quality-select"
+                        ).value;
+
+
+                    const encoder =
+                        linkRow.querySelector(
+                            ".encoder"
+                        ).value;
+
+
+                    const sizeMb =
+                        linkRow.querySelector(
+                            ".size-mb"
+                        ).value;
+
+
+                    const subChose =
+                        linkRow.querySelector(
+                            ".sub-chose"
+                        ).value;
+
+
+                    const url =
+                        linkRow.querySelector(
+                            ".link-url"
+                        ).value;
+
+
+                    const fileInput =
+                        linkRow.querySelector(
+                            ".sub-file"
+                        );
+
+
+                    if (
+                        !quality ||
+                        !encoder ||
+                        !sizeMb ||
+                        !url
+                    ) {
+                        continue;
+                    }
+
+
+                    const formData =
+                        new FormData();
+
+
+                    formData.append(
+                        "episode",
+                        String(episodeId)
+                    );
+
+
+                    formData.append(
+                        "quality",
+                        quality
+                    );
+
+
+                    formData.append(
+                        "encoder",
+                        encoder
+                    );
+
+
+                    formData.append(
+                        "size_mb",
+                        sizeMb
+                    );
+
+
+                    formData.append(
+                        "sub_chose",
+                        subChose
+                    );
+
+
+                    formData.append(
+                        "url",
+                        url
+                    );
+
+
+                    if (
+                        fileInput.files.length > 0
+                    ) {
+
+                        formData.append(
+                            "sub_file",
+                            fileInput.files[0]
+                        );
+
+                    }
+
+
+                    const linkResponse =
+                        await fetch(
+                            "http://127.0.0.1:8000/content/episode-streams/",
+                            {
+                                method: "POST",
+
+                                headers: {
+                                    "Authorization":
+                                        `Bearer ${accessToken}`
+                                },
+
+                                body: formData
+                            }
+                        );
+
+
+                    if (!linkResponse.ok) {
+
+                        console.log(
+                            "EPISODE LINK ERROR:",
+                            await linkResponse.json()
+                        );
+
+                    }
+
+                }
+
+            }
+
+        }
+
+
+        alert(
+            "Series created successfully."
+        );
+
+
+        window.location.href =
+            "series.html";
+
+    }
+);
+
+
+/* -------------------------
+   INIT
+------------------------- */
+
+
+async function init() {
+
+    await loadCatalog();
+
+    await loadPeople();
+
+    await loadQualities();
+
+}
+
+
+init();
+
+</script>
+
+</body>
+</html>
