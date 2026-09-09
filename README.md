@@ -42,8 +42,7 @@ MovieApp is a full-stack project built as a practical learning project, combinin
 
 The screenshots below show the current beta version of the application.
 
-<!-- Add your showcase image here -->
-
+![screenshot](screenshots/screen.jpg)
 ## 🚧 Project Status
 
 **Beta — v0.1.0**
